@@ -59,7 +59,7 @@ func loadTLSConfig(certPath, keyPath string) (*tls.Config, error) {
 	}, nil
 }
 
-func setupHTTPServer(ctx context.Context, p provider.Provider, cfg *apiServerConfig) (_ func(), retErr error) {
+func setupHTTPServer(ctx context.Context, p provider.Provider, cfg *apiServerConfig, getPodsFromKubernetes api.PodListerFunc) (_ func(), retErr error) {
 	var closers []io.Closer
 	cancel := func() {
 		for _, c := range closers {
@@ -92,9 +92,10 @@ func setupHTTPServer(ctx context.Context, p provider.Provider, cfg *apiServerCon
 		podRoutes := api.PodHandlerConfig{
 			RunInContainer:        p.RunInContainer,
 			GetContainerLogs:      p.GetContainerLogs,
-			GetPods:               p.GetPods,
 			StreamIdleTimeout:     cfg.StreamIdleTimeout,
 			StreamCreationTimeout: cfg.StreamCreationTimeout,
+			GetPodsFromKubernetes: getPodsFromKubernetes,
+			GetPods:               p.GetPods,
 		}
 		api.AttachPodRoutes(podRoutes, mux, true)
 
