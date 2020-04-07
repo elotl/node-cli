@@ -22,6 +22,7 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/virtual-kubelet/virtual-kubelet/node/env"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -88,6 +89,8 @@ type Opts struct {
 	KubeAPIBurst int32
 
 	Version string
+
+	EnvResolver env.ResolverFunc
 }
 
 // FromEnv sets default options for unset values on the passed in option struct.
