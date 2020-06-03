@@ -23,9 +23,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/pkg/errors"
 	"github.com/elotl/node-cli/opts"
 	"github.com/elotl/node-cli/provider"
+	"github.com/pkg/errors"
 	"github.com/virtual-kubelet/virtual-kubelet/log"
 	"github.com/virtual-kubelet/virtual-kubelet/node/api"
 )
