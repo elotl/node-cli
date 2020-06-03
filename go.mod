@@ -1,4 +1,4 @@
-module github.com/virtual-kubelet/node-cli
+module github.com/elotl/node-cli
 
 go 1.12
 
