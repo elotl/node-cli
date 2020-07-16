@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/virtual-kubelet/node-cli/opts"
-	"github.com/virtual-kubelet/node-cli/provider"
+	"github.com/elotl/node-cli/opts"
+	"github.com/elotl/node-cli/provider"
 	"github.com/virtual-kubelet/virtual-kubelet/log"
 	"github.com/virtual-kubelet/virtual-kubelet/node/api"
 )
