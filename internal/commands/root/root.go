@@ -20,11 +20,11 @@ import (
 	"path"
 	"time"
 
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 	"github.com/elotl/node-cli/manager"
 	"github.com/elotl/node-cli/opts"
 	"github.com/elotl/node-cli/provider"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 	"github.com/virtual-kubelet/virtual-kubelet/errdefs"
 	"github.com/virtual-kubelet/virtual-kubelet/log"
 	"github.com/virtual-kubelet/virtual-kubelet/node"
@@ -120,7 +120,9 @@ func runRootCommandWithProviderAndClient(ctx context.Context, pInit provider.Ini
 	// Start the informers now, so the provider will get a functional resource
 	// manager.
 	podInformerFactory.Start(ctx.Done())
+	podInformerFactory.WaitForCacheSync(ctx.Done())
 	scmInformerFactory.Start(ctx.Done())
+	scmInformerFactory.WaitForCacheSync(ctx.Done())
 
 	apiConfig, err := getAPIConfig(c)
 	if err != nil {
