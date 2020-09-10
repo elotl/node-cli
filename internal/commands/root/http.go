@@ -97,16 +97,11 @@ func setupHTTPServer(ctx context.Context, p provider.Provider, cfg *apiServerCon
 			GetPodsFromKubernetes: getPodsFromKubernetes,
 			GetPods:               p.GetPods,
 		}
-		api.AttachPodRoutes(podRoutes, mux, true)
 
-		var summaryHandlerFunc api.PodStatsSummaryHandlerFunc
 		if mp, ok := p.(provider.PodMetricsProvider); ok {
-			summaryHandlerFunc = mp.GetStatsSummary
+			podRoutes.GetStatsSummary = mp.GetStatsSummary
 		}
-		podMetricsRoutes := api.PodMetricsConfig{
-			GetStatsSummary: summaryHandlerFunc,
-		}
-		api.AttachPodMetricsRoutes(podMetricsRoutes, mux)
+		api.AttachPodRoutes(podRoutes, mux, true)
 
 		s := &http.Server{
 			Handler:   mux,
