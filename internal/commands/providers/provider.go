@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
 	"github.com/elotl/node-cli/provider"
+	"github.com/spf13/cobra"
 )
 
 // NewCommand creates a new providers subcommand
