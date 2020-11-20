@@ -35,11 +35,16 @@ import (
 	kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
-	"k8s.io/client-go/kubernetes/typed/coordination/v1beta1"
+	coordclientset "k8s.io/client-go/kubernetes/typed/coordination/v1"
+	//	"k8s.io/client-go/kubernetes/typed/coordination/v1beta1"
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/record"
+)
+
+const (
+	defaultLeaseLengthSeconds = 250
 )
 
 // NewCommand creates a new top-level command.
@@ -151,9 +156,9 @@ func runRootCommandWithProviderAndClient(ctx context.Context, pInit provider.Ini
 		"watchedNamespace": c.KubeNamespace,
 	}))
 
-	var leaseClient v1beta1.LeaseInterface
+	var leaseClient coordclientset.LeaseInterface
 	if c.EnableNodeLease {
-		leaseClient = client.CoordinationV1beta1().Leases(corev1.NamespaceNodeLease)
+		leaseClient = client.CoordinationV1().Leases(corev1.NamespaceNodeLease)
 	}
 
 	nodeProvider, ok := p.(node.NodeProvider)
@@ -165,7 +170,7 @@ func runRootCommandWithProviderAndClient(ctx context.Context, pInit provider.Ini
 		nodeProvider,
 		pNode,
 		client.CoreV1().Nodes(),
-		node.WithNodeEnableLeaseV1Beta1(leaseClient, nil),
+		node.WithNodeEnableLeaseV1(leaseClient, defaultLeaseLengthSeconds),
 		node.WithNodeStatusUpdateErrorHandler(func(ctx context.Context, err error) error {
 			if !k8serrors.IsNotFound(err) {
 				return err
